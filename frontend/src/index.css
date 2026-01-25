@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+button {
+  /* appearance: none; */
+  height: 3vw;
+  width: 12vw;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366F1 0%, #06B6D4 100%);
+  cursor: pointer;
+  /* -webkit-tap-highlight-color: transparent; */
+}
+
+button:hover {
+  background-position: 100% 0;
+  transform: translateY(-1px);
+  box-shadow: var(--btn-shadow-hover);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}

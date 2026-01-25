@@ -1,0 +1,136 @@
+/* .download-container {
+    font-family: "Segoe UI", Arial, sans-serif;
+    max-width: 3.5vw;
+    height: 3.5vw;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #a37777;
+}
+
+.download-container_hide {
+    font-family: "Segoe UI", Arial, sans-serif;
+    max-width: 3.2vw;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    background-color: #a37777;
+
+}
+
+.download-btn {
+    background: linear-gradient(135deg, #4cafef, #0078d7);
+    color: white;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    height: 3.2vw;
+    width: 3.2vw;
+    border-radius: 50%;
+    padding: 0.3vw;
+}
+
+.download-btn img{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.download-btn:hover:enabled {
+    background: linear-gradient(135deg, #0078d7, #005a9e);
+}
+
+.download-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.progress-wrapper {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #866e6e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #81c784);
+    transition: width 0.4s ease;
+}
+
+.progress-text {
+    margin-top: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.status-text {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #666;
+} */
+
+
+.circular-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-progress {
+    height: 3.5vw;
+    width: 3.5vw;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: conic-gradient(#ccc 0deg, #ccc 360deg);
+    position: relative;
+}
+
+.download-btn {
+    height: 3.1vw;
+    width: 3.1vw;
+    border-radius: 50%;
+    border: none;
+    /* background: white; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.download-btn img {
+    height: 70%;
+    width: 70%;
+    object-fit: contain;
+    /* background-color: #4d2f2f; */
+}
+
+.blank_blue{
+    height: 100%;
+    width: 100%;
+    background-color: rgb(1, 76, 133);
+    border-radius: 50%;
+}
+
+.progress-text {
+    position: absolute;
+    font-size: 1.2vw;
+    font-weight: bold;
+    color: #e8e8e8;
+}

@@ -1,0 +1,86 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "main": "main.js",
+  "build": {
+    "appId": "com.pentrilon",
+    "productName": "Pentrilon",
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "backend/**/*",
+      "node_modules/**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "../backend/dist/main.exe",
+        "to": "resources/main.exe"
+      },
+      {
+        "from": ".env",
+        "to": ".env"
+      }
+    ],
+    "directories": {
+      "buildResources": "assets",
+      "output": "C:/electron/penitrilon"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "start": "electron .",
+    "build": "webpack --mode production",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@tailwindcss/postcss": "^4.1.12",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "dotenv-webpack": "^8.1.1",
+    "electron": "^37.3.0",
+    "electron-builder": "^26.0.12",
+    "electron-devtools-installer": "^4.0.0",
+    "electron-packager": "^17.1.2",
+    "html-webpack-plugin": "^5.6.4",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^4.1.12",
+    "webpack": "^5.101.2",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.8.2",
+    "assert": "^2.1.0",
+    "axios": "^1.13.2",
+    "dotenv": "^17.2.1",
+    "dotenv-expand": "^12.0.2",
+    "gsap": "^3.13.0",
+    "node-polyfill-webpack-plugin": "^4.1.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.8.1",
+    "redux": "^5.0.1",
+    "redux-persist": "^6.0.0",
+    "redux-persist-electron-storage": "^2.1.0",
+    "swiper": "^11.2.10"
+  }
+}
