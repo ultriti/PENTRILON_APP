@@ -15,6 +15,24 @@
 }
 
 
+.Latest_btn {
+    height: 3vw;
+    width: 3vw;
+    border-radius: 50%;
+    overflow: hidden;
+    position: absolute;
+    /* right: 0; */
+    
+    margin: 0vw 1vw;
+    padding: 0.5vw;
+    background: #25252544;
+}
+
+.Latest_btn img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
 .ping_btn {
     height: 3.5vw;
     width: 3.5vw;
@@ -34,7 +52,7 @@
     object-fit: contain;
 }
 
-.Downloaded_blank_img{
+.Downloaded_blank_img {
     height: 3.5vw;
     width: 3.5vw;
     position: fixed;
@@ -47,10 +65,10 @@
     justify-content: center;
     border-radius: 50%;
     background-color: rgb(1, 76, 133);
-    cursor:not-allowed;
+    cursor: not-allowed;
 }
 
-.Downloaded_blank_img img{
+.Downloaded_blank_img img {
     height: 70%;
     width: 70%;
     object-fit: contain;
@@ -135,18 +153,19 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.User_AI_intercation_History::-webkit-scrollbar{
+.User_AI_intercation_History::-webkit-scrollbar {
     width: 2px;
     background-color: #232323;
 }
-.User_AI_intercation_History::-webkit-scrollbar-thumb{
+
+.User_AI_intercation_History::-webkit-scrollbar-thumb {
     background-color: #6e0260;
 }
 
 .User_AI_intercation_History_Cont {
     min-height: 64vh;
     width: 100%;
-    padding: .5vw 0; 
+    padding: .5vw 0;
 }
 
 .UserAccount_Frame {
@@ -157,31 +176,75 @@
     margin-top: 0.1vw;
 }
 
-.Conversation_Title_frame{
+.Conversation_Title_frame {
     height: 3vw;
     width: 100%;
     display: flex;
     align-items: center;
     padding: 0 1vw;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow:ellipsis;
 
 }
 
-.Conversation_Title_frame:hover{
+.Conversation_Title_frame-active {
+    background-color: #040142;
+}
+
+.Conversation_Title_frame:hover {
     background-color: #020539;
     cursor: pointer;
 }
 
-.Conversation_Title_frame p{
-    font-size: 1.2vw;
+.Conversation_Title_frame p {
+    font-size: 1vw;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.Username_Info_Frame{
+.Username_Info_Frame {
     height: 100%;
     width: 100%;
-    background-color: #fff;
+    /* background-color: #fff; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 1vw;
+}
+
+.User_Profile_Picture {
+    height: 2.7vw;
+    width: 2.7vw;
+    background-color: #834f4f;
+    border-radius: 50%;
+}
+
+.User_Username_Frame {
+    height: 3vw;
+    width: 11vw;
+    /* background-color: #a93535; */
+    display: flex;
+    flex-direction: column;
+    padding: 0.3vw 0.8vw;
+    gap: 0.2vw;
+    cursor: pointer;
+}
+
+.User_Username_Frame .Username_text {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-transform: capitalize;
+    font-size: 1vw;
+    font-weight: 600;
+    color: rgb(197, 197, 197);
+    
+
+}
+
+.User_Username_Frame .Plan_text {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 0.8vw;
+    font-weight: 600;
+    color: rgb(162, 162, 162);
+    gap: 0.2vw;
 }
 
 /* right interaction frame */
@@ -198,7 +261,7 @@
     padding: 1vw 0vw 0 2vw;
 }
 
-.Pentrilon_Agent_Frame{
+.Pentrilon_Agent_Frame {
     height: 10vh;
     width: 83%;
     align-self: baseline;
@@ -291,7 +354,7 @@ svg {
 .AI_Response_Info_Frame {
     min-height: 30vh;
     width: 100%;
-    
+
     border-radius: 10px;
     overflow-y: auto;
     display: flex;
@@ -300,7 +363,8 @@ svg {
     color: rgb(0, 0, 0);
     /* padding: 0.5vw; */
     margin-top: 1vw;
-    padding: 1vw 2vw 1vw 1vw;
+    padding: 1vw 2vw 0vw 1vw;
+    /* background-color: #ab4c4c; */
 }
 
 .AI_Response_Info_Frame_h {
@@ -390,6 +454,7 @@ svg {
 ._____ {
     height: 1vw;
     width: 100%;
+    background-color: #fff;
 }
 
 .AI_res_image_prov {

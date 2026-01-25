@@ -442,6 +442,7 @@ def GetUserPrompt():
     info = ""
     text_ = "none"
     text = Prompt
+    success = False
 
     try:
 
@@ -540,9 +541,106 @@ def GetUserPrompt():
 
         # ------------------------> house price prediction <-----------------------------
         elif "house" in text and ("prediction" in text or "predict" in text):
+            # HousePricePredictionBanglore
+            print("HPP",text)
+            try:
+                text = text.lower()
 
+                # Extract bhk, sqft, bath using regex
+                bhk_match = re.search(r"(\d+)\s*bhk", text) or re.search(
+                    r"bhk\s*(\d+)", text
+                )
+                sqft_match = re.search(r"(\d+)\s*sqft", text) or re.search(
+                    r"\ssqft*(\d+)", text
+                )
+                bath_match = re.search(r"(\d+)\s*bath", text) or re.search(
+                    r"\sbath*(\d+)", text
+                )
 
-            print(text, text_, info, success, status)
+                bhk = int(bhk_match.group(1)) if bhk_match else None
+                sqft = int(sqft_match.group(1)) if sqft_match else None
+                bath = int(bath_match.group(1)) if bath_match else None
+
+                # Extract location by removing known tokens
+                tokens = text.split()
+                ignore = {
+                    "house",
+                    "price",
+                    "prediction",
+                    "predict",
+                    "in",
+                    "sqft",
+                    "bhk",
+                    "bath",
+                    "with",
+                    "banglore",
+                    "and",
+                    "value",
+                }
+
+                print("ignore",ignore)
+
+                location_tokens = [
+                    t
+                    for t in tokens
+                    if not any(x in t for x in ignore) and not t.isdigit()
+                ]
+
+                print(location_tokens)
+                location = str(" ".join(location_tokens))
+
+                # --->  handling missing values
+                missing = []
+
+                if not bath:
+                    missing.append("bath")
+                if not sqft:
+                    missing.append("sqft")
+                if not sqft:
+                    missing.append("bhk")
+                if not sqft:
+                    missing.append("location")
+
+                if missing:
+                    return (
+                        jsonify(
+                            {
+                                "status": "incomplete",
+                                "missing": f"Please provide {', '.join(missing)}",
+                                "info": f"format -\nhouse price prediction in banglore area value  value bathroom    value bhk  value  sqft)",
+                                "text": f"Please provide {', '.join(missing)}",
+                            }
+                        ),
+                        200,
+                    )
+
+                print("Location:", location)
+                print("BHK:", bhk)
+                print("Sqft:", sqft)
+                print("Bath:", bath)
+
+                # Instead of calling the Flask route directly, forward the request
+                response = requests.post(
+                    "http://127.0.0.1:5000/HousePricePredictionBanglore",
+                    json={"location": location, "bhk": bhk, "bath": bath, "sqft": sqft},
+                )
+
+                # print("status code:", response.status_code)
+                # print("message:", response.json().get("message"))
+
+                if response.status_code == 200:
+                    message = response.json().get("message")
+                    result = response.json().get("result")
+                    success = response.json().get("success")
+                    status = response.status_code
+
+                    info = f" in '{location}' House pice is Approx:-  '{ result } Rs' - for\n {bhk} bhk | {bath} bathroom | almost {sqft} sqft"
+                    text = message
+
+                print(text, text_, info, success)
+            except Exception as e:
+                print("error", e)
+                text_ = {"error": "Failed to fetch house prediction"}
 
             return (
                 jsonify(
@@ -701,7 +799,7 @@ def GetUserPrompt():
         return jsonify({"message": text_, "text": text_, "info": info}), 200
 
     except Exception as e:
-        print(e)
+        print("error",e)
         return jsonify({"error": str(e)}), 500
 
 

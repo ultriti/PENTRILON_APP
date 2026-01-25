@@ -47,7 +47,7 @@ const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, se
                     lastConvo.convo.push(message);
                     localStorage.setItem("selected convo_new", 0)
                 } else {
-                    alert("error adding msg")
+                    // alert("error adding msg")
                 }
 
 

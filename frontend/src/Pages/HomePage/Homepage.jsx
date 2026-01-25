@@ -17,15 +17,16 @@ import compose_webp from "../../../public/images/app_components/compose.webp"
 import business_webp from "../../../public/images/app_components/business.webp"
 import download_webp from "../../../public/images/app_components/download_5336468.webp"
 import downloaded_webp from "../../../public/images/app_components/upload (1).webp"
+import down_webp from "../../../public/images/app_components/down.webp"
 
 import SearchBarComp from "../../Components/SearchBarComp.jsx";
 import DownloadModelButton from "../../Components/DownloadModelBtn.jsx";
 import AudioRingVisualizer from "../Automation/AI_audio_circular_wave.jsx";
 
-
 const Homepage = () => {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
+  const interactFrameRef = useRef(null); // 👈 NEW: Added for scrolling
 
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setisSpeaking] = useState(false)
@@ -49,6 +50,24 @@ const Homepage = () => {
   const [selectedConvo, setselectedConvo] = useState(null)
   const [interactions, setinteractions] = useState([])
 
+  // 👈 NEW: Scroll function
+  const scrollToLatestConvo = useCallback(() => {
+    const latestConvo = document.getElementById('latest_convo');
+    if (latestConvo && interactFrameRef.current) {
+      latestConvo.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      });
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (Conversation.length > 0) {
+      scrollToLatestConvo();
+    }
+  }, [Conversation.length, scrollToLatestConvo]);
 
   const PentrilonSpeaker = (text) => {
     setisSpeaking(true);
@@ -60,14 +79,12 @@ const Homepage = () => {
     speak_Info(text || "hello", () => setisSpeaking(false));
   };
 
-
   const StartRecording = async () => {
     setIsRecording(true);
     const data = { da: "hello" };
     const res = await axios.post("http://127.0.0.1:8000/getUserAudio", data, { withCredentials: true });
 
     if (res.status === 200) {
-
       console.log("Transcription:", res.data);
       PentrilonSpeaker(String(res.data.text));
       setAI_Speak_Msg(res.data.text);
@@ -84,20 +101,15 @@ const Homepage = () => {
         setTimeout(async () => {
           console.log('spek no2');
 
-
-
           const get_text_ = async () => {
             const data_ = {
               data: "hey"
             }
 
             try {
-
               const A2Text = await axios.post("http://127.0.0.1:8000/GetAudio_To_Text", data_, { withCredentials: true });
 
-
               if (A2Text.status == 200) {
-
                 setAI_Speak_Msg(A2Text.data.message);
 
                 setInteraction(data_)
@@ -113,7 +125,6 @@ const Homepage = () => {
                   get_text_()
                 }
 
-
               } else {
                 alert(A2Text.data.error)
               }
@@ -121,16 +132,11 @@ const Homepage = () => {
             } catch (error) {
               console.log('error', error);
               alert("internal error")
-
-
             }
-
           }
 
           get_text_()
         }, 2000);
-
-
       }
     }
   };
@@ -140,35 +146,8 @@ const Homepage = () => {
     // stopSpeaking()
   }
 
-
-  // const AI_interact_store = () =>{
-  //   Set_Convo_Detail("hello");
-  //   Remove_Convo(null)
-  //   // console.log('AI_interact',AI_interact);
-  // }
-
-  // useEffect(() => {
-  //   // console.log("AI_Speak_Msg---------->", AI_Speak_Msg)
-  //   if (AI_Speak_Msg.toLowerCase() === "yes.") {
-  //     console.log('automation <------------------------');
-  //     // console.clear();
-
-  //     stopSpeechRecognition();
-  //     setsetTimer_(0)
-
-  //     setTimeout(() => {
-  //       Search_Bar_auto();
-
-  //     }, 2000);
-
-
-  //   }
-  // }, [AI_Speak_Msg]);
-
-
   const pinging = async () => {
     const data = "hello"
-    // AI_interact_store()
     try {
       const res = await axios.get("http://127.0.0.1:8000/Ping", data, { withCredentials: true });
       if (res.status == 200) {
@@ -182,65 +161,29 @@ const Homepage = () => {
 
       alert("Restarting Pentrilon Plesse wait")
     }
-
   }
-
-  // const New_convo = () => {
-  //   setIsNewConvo(true);
-  //   localStorage.setItem("convo_new", "1");
-  //   setselectedConvo(null)
-
-  //   // Get current convo_num as integer
-  //   let convo_num = parseInt(localStorage.getItem("convo_num") || "0", 10);
-  //   const interact = localStorage.getItem("AI_interact")
-  //   console.log('---> interact',interact);
-
-  //   setinteractions(interact ? interact  : [])
-
-  //   if (convo_num === 0) {
-  //     convo_num = 1;
-  //   } else {
-  //     convo_num = convo_num + 1;
-  //   }
-
-  //   localStorage.setItem("convo_num", convo_num.toString());
-  //   setconvoLen(convo_num)
-
-  //   // Reset UI state
-  //   setAI_Response_Info("");
-  //   setAI_respond("");
-  // };
-
-
-  // clear local storage
-
 
   const New_convo = useCallback(() => {
     setIsNewConvo(true);
     localStorage.setItem("convo_new", "1");
     setselectedConvo(null);
 
-    // Parse interactions properly as JSON array
     const interact = JSON.parse(localStorage.getItem("AI_interact") || "[]");
     setinteractions(interact);
 
-    // Increment convo counter safely
     let convo_num = parseInt(localStorage.getItem("convo_num") || "0", 10) + 1;
     localStorage.setItem("convo_num", convo_num.toString());
     setconvoLen(convo_num);
 
-    // Reset AI responses
     setAI_Response_Info("");
     setAI_respond("");
-  }, [setIsNewConvo, setselectedConvo, setinteractions, setconvoLen, setAI_Response_Info, setAI_respond]);
-
+  }, []);
 
   const clear_convo_LS = () => {
     localStorage.removeItem("AI_interact")
     setAI_Response_Info("")
     setAI_respond("")
   }
-
 
   useEffect(() => {
     const getlocal = localStorage.getItem("AI_interact");
@@ -254,22 +197,21 @@ const Homepage = () => {
     const interact = JSON.parse(localStorage.getItem("AI_interact") || "[]");
     setinteractions(interact);
 
-    localStorage.setItem("selectedConvo",selectedConvo)
+    localStorage.setItem("selectedConvo", selectedConvo)
   }, [AI_respond, AI_Response_Info, selectedConvo])
-
-
 
   return (
     <div className="HomePage_frame">
       <div className="HomePage_cont">
 
+        {/* 👈 UPDATED: Latest button with scroll function */}
         <button className="ping_btn" onClick={() => { pinging() }}>
           <img src={wifi_webp} alt="" />
         </button>
 
+
         {
           Installed_
-            // false
             ? (
               <>
                 <button className="Downloaded_blank_img">
@@ -286,7 +228,6 @@ const Homepage = () => {
         }
 
         {/* ------------------------> interaction history frame  */}
-
         <div className="History_Interact_Frame">
 
           <div className="AI_Voice_Response_Frame">
@@ -310,11 +251,11 @@ const Homepage = () => {
               <div className="Conversation_Title_frame">
                 <p>Conversation</p>
               </div>
-              
+
               {interactions?.length > 0 && interactions.map((interaction, i) => (
                 <div
-                  className="Conversation_Title_frame"
-                  key={interaction.id || interaction.convo[0]?.timestamp || i} // Use stable ID
+                  className={Number(selectedConvo) + 1 == interaction.convo_id ? "Conversation_Title_frame Conversation_Title_frame-active" : "Conversation_Title_frame"}
+                  key={interaction.id || interaction.convo[0]?.timestamp || i}
                   onClick={() => setselectedConvo(i)}
                 >
                   <p>
@@ -324,20 +265,25 @@ const Homepage = () => {
                 </div>
               ))}
 
-
-
             </div>
-
           </div>
 
           <div className="UserAccount_Frame">
             <div className="Username_Info_Frame">
 
+              <div className="User_Profile_Picture">
+                {/* <img src="" alt="" /> */}
+              </div>
+
+              <div className="User_Username_Frame">
+                <p className="Username_text">{"yashash"}</p>
+                <p className="Plan_text">{"free plan"}</p>
+              </div>
+
             </div>
           </div>
 
         </div>
-
 
         {/* --------------------> ai user intercation frame */}
         <div className="Pentrilon_Interact_Frame">
@@ -345,12 +291,20 @@ const Homepage = () => {
             <p>Pentrilon Agent: {AI_Speak_Msg} {AI_Speak_Msg ? ". . ." : ""} </p>
           </div>
 
-
-          <div className={Conversation.length > 0 ? "Interact_comp  Interact_comp_SB" : "Interact_comp"}>
+          <div
+            className={Conversation.length > 0 ? "Interact_comp  Interact_comp_SB" : "Interact_comp"}
+            ref={interactFrameRef}
+          >
 
             {
               Conversation ? (
                 <div className={Conversation.length > 0 ? "AI_Response_Info_Frame AI_Response_Info_Frame_h" : "AI_Response_Info_Frame"}>
+                  <button
+                    className="Latest_btn"
+                    onClick={scrollToLatestConvo}
+                  >
+                    <img src={down_webp} alt="Go to latest conversation" />
+                  </button>
                   {
                     Conversation ? Conversation.map((convo, i) =>
                     (
@@ -358,14 +312,9 @@ const Homepage = () => {
 
                         <div className="AI_Res_info_frame">
 
-
                           <div className="AI_Res_info_cont">
-                            {
-                              console.log('----> cnovo', convo)
-                            }
 
                             {
-
                               convo.image ? (
                                 <div className="AI_res_image_prov">
                                   <img src={`${convo.image}`} alt="" className="file_prov_user" />
@@ -375,30 +324,28 @@ const Homepage = () => {
                               )
                             }
 
-
-
                             <div className={convo.id == 1202 ? "AI_Res_info_frame_cont" : "AI_Res_info_frame_cont_user"}>
                               <div className={convo.id == 1202 ? "AI_Res_info_frame_cont_2" : "AI_Res_info_frame_cont_2_user"}>
                                 {convo.info}
                               </div>
                             </div>
 
-                            {/* <div className="_____">  </div> */}
-
                           </div>
+
                         </div>
                       </div>
-
 
                     )) : (<></>)
                   }
 
+                  <div className="Conversation_Title_frame" id="latest_convo">
+                    {/* <p>Latest conversation content here...</p>  */}
+                  </div>
                 </div>
               ) : (
                 <></>
               )
             }
-
 
             {/* user send prompt from  */}
             <div className={AI_Response_Info ? "User_interaction_frame" : "User_interaction_frame User_interaction_frame_top"}>
@@ -447,9 +394,7 @@ const Homepage = () => {
 
                 </div>
 
-
               </div>
-
 
             </div>
           </div>
