@@ -10,7 +10,7 @@ button {
   height: 3vw;
   width: 12vw;
   border-radius: 10px;
-  background: linear-gradient(135deg, #6366F1 0%, #06B6D4 100%);
+  /* background: linear-gradient(135deg, #6366F1 0%, #06B6D4 100%); */
   cursor: pointer;
   /* -webkit-tap-highlight-color: transparent; */
 }

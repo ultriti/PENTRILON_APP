@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react'
 import "./SearchBarComp.css"
 import axios from 'axios'
 
-import send_webp from "../../public/images/app_components/send.webp"
+import send_webp from "../../public/images/app_components/arrow.webp"
 import plus_webp from "../../public/images/app_components/clip.png"
 import check_webp from "../../public/images/app_components/check.png"
 
@@ -38,7 +38,7 @@ const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, se
 
         if (selected_convo_id != String(null)) {
 
-            for (let index = 0; index < interactions.length; index++) {
+            for (let index = 0; index < interactions?.length; index++) {
 
                 if (interactions[index].convo_id == Number(selected_convo_id)+1) {
                     const lastConvo = interactions[Number(selected_convo_id)];
@@ -55,9 +55,9 @@ const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, se
             }
 
         } else {
-            if (new_convo == 1 || interactions.length === 0) {
+            if (new_convo == 1 || interactions?.length === 0) {
 
-                const convo_id = interactions.length + 1;
+                const convo_id = interactions?.length + 1;
                 const newConvo = {
                     convo_id: convo_id,
                     convo: [message]
@@ -66,7 +66,7 @@ const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, se
                 localStorage.setItem("convo_new", 0)
             } else {
 
-                const lastConvo = interactions[interactions.length - 1];
+                const lastConvo = interactions[interactions?.length - 1];
 
                 lastConvo.convo.push(message);
                 localStorage.setItem("convo_new", 0)
@@ -195,7 +195,7 @@ const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, se
                         </svg>
                     ) : (
                         <button
-                            className="AI_Speech_Rec_toggle Label_send_data"
+                            className="AI_Speech_Rec_toggle_submit Label_send_data"
                             type="submit"
                         >
                             <img src={send_webp} alt="Send" />

@@ -23,13 +23,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 from open_appliaction import (
-    open_notepad,
-    open_calculator,
-    open_calculator,
-    open_settings,
-    open_chrome,
-    open_vscode,
-    open_edge,
+    open_notepad, open_calculator, open_settings, open_chrome, open_vscode, open_edge
 )
 
 from Model_Interaction import (
@@ -374,13 +368,13 @@ def get_user_audio():
                 elif "calculator" in text:
                     text_ = open_calculator(text)
 
-                elif "chrome application" in text:
+                elif "chrome" in text:
                     text_ = open_chrome(text)
 
                 elif "visual studio code" in text:
                     text_ = open_vscode(text)
 
-                elif "vs code application" in text:
+                elif "vs code" in text:
                     text_ = open_vscode(text)
 
                 elif "microsoft edge" in text:
@@ -391,6 +385,9 @@ def get_user_audio():
 
             except Exception as e:
                 print(e)
+        
+
+
 
         elif (
             "who" in text

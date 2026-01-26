@@ -1,10 +1,10 @@
 .SearchBarComp_frame {
-    height: 90%;
+    height: 100%;
     width: 100%;
     /* background-color: #fff; */
     display: flex;
     flex-direction: row;
-    align-items: center;
+    /* align-items: center; */
     padding: 0vw .5vw;
 }
 
@@ -14,7 +14,7 @@ form {
     /* background-color: #fff; */
     display: flex;
     flex-direction: row;
-    align-items: center;
+    /* align-items: center; */
     border: none;
 }
 
@@ -52,32 +52,33 @@ form {
     border-radius: 20px;
 }
 
-.Promt_Input_:active{
+.Promt_Input_:active {
     border: 1px solid #0e0e0e;
 }
-.Promt_Input_:focus{
+
+.Promt_Input_:focus {
     border: 1px solid #0e0e0e;
 }
-.Promt_Input_:target{
+
+.Promt_Input_:target {
     border: 1px solid #0e0e0e;
 }
 
 
-.Input_add_file_frame{
+.Input_add_file_frame {
     height: 100%;
     width: 8%;
-    /* background-color: #fff; */
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 20px;
 }
 
-.Check_img{
+.Check_img {
     height: 100%;
     width: 100%;
-    height: 3vw;
-    width: 3vw;
+    height: 2vw;
+    width: 2vw;
     border-radius: 50%;
     font-size: 2vw;
     border: 1px solid rgb(58, 58, 58);
@@ -86,11 +87,11 @@ form {
     padding: 0.1vw;
 }
 
-.Input_add_file_frame .Attach_img{
-    height: 100%;
-    width: 100%;
-    height: 3vw;
-    width: 3vw;
+.Input_add_file_frame .Attach_img {
+    height: 80%;
+    width: 80%;
+    height: 2.5vw;
+    width: 2.5vw;
     border-radius: 50%;
     font-size: 2vw;
     border: 1px solid rgb(58, 58, 58);
@@ -99,33 +100,57 @@ form {
     padding: 0.6vw;
 }
 
-.Input_add_file_frame img:hover{
+.Input_add_file_frame img:hover {
     background-color: #3f3f3f;
 }
 
 /* avg spinner */
 .svg-spinner {
-  --size: 3rem;
-  --track: rgba(255,255,255,0.15);
-  --accent: #930977;
-  width: var(--size);
-  height: var(--size);
+    --size: 3rem;
+    --track: rgba(255, 255, 255, 0.15);
+    --accent: #930977;
+    width: var(--size);
+    height: var(--size);
 }
 
 .ring {
-  fill: none;
-  stroke: var(--track);
-  stroke-width: 4;
+    fill: none;
+    stroke: var(--track);
+    stroke-width: 4;
 }
 
 .arc {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-dasharray: 100 140; /* arc length */
-  transform-origin: 25px 25px;
-  animation: spin 0.9s linear infinite;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 100 140;
+    /* arc length */
+    transform-origin: 25px 25px;
+    animation: spin 0.9s linear infinite;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.AI_Speech_Rec_toggle_submit {
+    height: 2.5vw;
+    width: 2.5vw;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid rgb(58, 58, 58);
+    box-shadow: 0 0 10px rgb(0, 0, 0);
+    padding: 0.6vw;
+    overflow: hidden;
+}
+
+.AI_Speech_Rec_toggle_submit img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    /* background-color: #fff; */
+}

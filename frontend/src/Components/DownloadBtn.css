@@ -106,7 +106,7 @@
     width: 3.1vw;
     border-radius: 50%;
     border: none;
-    /* background: white; */
+    background-color: rgb(1, 76, 133);
     display: flex;
     align-items: center;
     justify-content: center;
