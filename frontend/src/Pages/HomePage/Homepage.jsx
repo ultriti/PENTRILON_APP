@@ -19,10 +19,12 @@ import download_webp from "../../../public/images/app_components/download_533646
 import downloaded_webp from "../../../public/images/app_components/upload (1).webp"
 import down_webp from "../../../public/images/app_components/down.webp"
 import user_webp from "../../../public/images/app_components/user.webp"
+import Micro_chip_webp from "../../../public/images/app_components/micro-chip.webp"
 
 import SearchBarComp from "../../Components/SearchBarComp.jsx";
 import DownloadModelButton from "../../Components/DownloadModelBtn.jsx";
 import AudioRingVisualizer from "../Automation/AI_audio_circular_wave.jsx";
+
 
 const Homepage = () => {
   const mediaRecorderRef = useRef(null);
@@ -51,6 +53,83 @@ const Homepage = () => {
   const [selectedConvo, setselectedConvo] = useState(null)
   const [interactions, setinteractions] = useState([])
 
+  // --------------------------
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [isSending, setisSending] = useState(false)
+
+  const loadInteractions = useCallback(() => {
+    try {
+      const getlocal = localStorage.getItem("AI_interact");
+      return getlocal ? JSON.parse(getlocal) : [];
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const saveInteractions = useCallback((interactions) => {
+    try {
+      localStorage.setItem("AI_interact", JSON.stringify(interactions));
+    } catch (e) {
+      console.error("Failed to save interactions:", e);
+    }
+  }, []);
+
+  const setInteraction = useCallback((message, isNewConvo = IsNewConvo) => {
+
+    const interactions = loadInteractions();
+    const new_convo = localStorage.getItem("convo_new")
+    const selected_convo_id = localStorage.getItem("selectedConvo")
+    // alert(isNewConvo,new_convo)
+
+    if (selected_convo_id != String(null)) {
+
+      for (let index = 0; index < interactions?.length; index++) {
+
+        if (interactions[index].convo_id == Number(selected_convo_id) + 1) {
+          const lastConvo = interactions[Number(selected_convo_id)];
+
+          // if()
+          lastConvo.convo.push(message);
+          localStorage.setItem("selected convo_new", 0)
+        } else {
+          // alert("error adding msg")
+        }
+
+
+
+      }
+
+    } else {
+      if (new_convo == 1 || interactions?.length === 0) {
+
+        const convo_id = interactions?.length + 1;
+        const newConvo = {
+          convo_id: convo_id,
+          convo: [message]
+        };
+        interactions.push(newConvo);
+        localStorage.setItem("convo_new", 0)
+      } else {
+
+        const lastConvo = interactions[interactions?.length - 1];
+
+        lastConvo.convo.push(message);
+        localStorage.setItem("convo_new", 0)
+      }
+    }
+
+
+
+    saveInteractions(interactions);
+  }, [loadInteractions, saveInteractions]);
+
+  const createAiMessageData = useCallback((text, info, imageUrl) => ({
+    id: 1202,
+    text,
+    info: info || text,
+    image: imageUrl || null
+  }), []);
+
 
   // 👈 NEW: Scroll function
   const scrollToLatestConvo = useCallback(() => {
@@ -78,10 +157,37 @@ const Homepage = () => {
 
   const StartRecording = async () => {
     setIsRecording(true);
-    const data = { da: "hello" };
-    const res = await axios.post("http://127.0.0.1:8000/getUserAudio", data, { withCredentials: true });
+    const formData = new FormData()
+    // formData.append("Prompt", SendPromptValue)
+    if (selectedFile) {
+      formData.append("file", selectedFile)
+    }
+
+    // const data = { da: "hello" };
+    setisSending(true)
+
+
+    const res = await axios.post("http://127.0.0.1:8000/getUserAudio", formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" }
+    });
 
     if (res.status === 200) {
+
+      const data_user = {
+        id: 1205,
+        text: "user said - update it later",
+        info: "user said - update it later",
+        image: null
+      }
+      setInteraction(data_user)
+
+      const imageUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+      if (imageUrl) setImage_res(imageUrl);
+
+      const data_ai = createAiMessageData(res.data.text, res.data.info, imageUrl);
+      setInteraction(data_ai);
+
       console.log("Transcription:", res.data);
       PentrilonSpeaker(String(res.data.text));
       setAI_Speak_Msg(res.data.text);
@@ -367,6 +473,8 @@ const Homepage = () => {
                     setAI_Response_Info={setAI_Response_Info}
                     setImage_res={setImage_res}
                     IsNewConvo={IsNewConvo}
+                    selectedFile={selectedFile}
+                    setSelectedFile={setSelectedFile}
                   />
 
                   {/* ai interact buttons  */}
@@ -409,23 +517,15 @@ const Homepage = () => {
 
                   <div className="Input_Feature_Left">
                     <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>
-                      {
-                        isRecording ? (<><img src={stop_rec_webp} alt="" /></>) : (<><img src={mic_webp} alt="" /></>)
-                      }
+                      {/* <img src={mike_webp} alt="" /> */}
                     </button>
-                    <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>
-                      {
-                        isRecording ? (<><img src={stop_rec_webp} alt="" /></>) : (<><img src={mic_webp} alt="" /></>)
-                      }
-                    </button>
+
                   </div>
 
                   <div className="Input_Feature_Right">
 
                     <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>
-                      {
-                        isRecording ? (<><img src={stop_rec_webp} alt="" /></>) : (<><img src={mic_webp} alt="" /></>)
-                      }
+                      <img src={Micro_chip_webp} alt="" />
                     </button>
 
                     <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>

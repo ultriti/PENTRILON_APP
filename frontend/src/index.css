@@ -14,6 +14,9 @@ button {
   cursor: pointer;
   /* -webkit-tap-highlight-color: transparent; */
 }
+/* input{
+  border: none;
+} */
 
 button:hover {
   background-position: 100% 0;

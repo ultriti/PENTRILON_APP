@@ -20,13 +20,43 @@ form {
 
 .Search_Bar_Label {
     height: 100%;
-    width: 80%;
+    width: 90%;
     /* background-color: #fff; */
     border: 0;
     display: flex;
     align-items: center;
 }
 
+
+
+
+
+.Promt_Input_ {
+    height: 80%;
+    width: 100%;
+    background-color: transparent;
+    /* background-color: red; */
+    padding: 0 1vw;
+    border: 0;
+    font-size: 1.2vw;
+    display: flex;
+    flex-wrap: wrap;
+    color: rgb(209, 209, 209);
+    border-radius: 10px;
+}
+
+.Promt_Input_:active {
+    border: 1px solid #0e0e0e;
+}
+
+.Promt_Input_:focus {
+    border: 1px solid #0e0e0e;
+    outline: none;
+}
+
+.Promt_Input_:target {
+    border: 1px solid #0e0e0e;
+}
 
 
 .Input_Search_Btn_Frame {
@@ -36,32 +66,6 @@ form {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.Promt_Input_ {
-    height: 80%;
-    width: 100%;
-    background-color: transparent;
-    /* background-color: red; */
-    padding: 0 1vw;
-    border: none;
-    font-size: 1.2vw;
-    display: flex;
-    flex-wrap: wrap;
-    color: rgb(209, 209, 209);
-    border-radius: 20px;
-}
-
-.Promt_Input_:active {
-    border: 1px solid #0e0e0e;
-}
-
-.Promt_Input_:focus {
-    border: 1px solid #0e0e0e;
-}
-
-.Promt_Input_:target {
-    border: 1px solid #0e0e0e;
 }
 
 

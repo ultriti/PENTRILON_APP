@@ -346,6 +346,8 @@ def Automate_browser():
 
 @app.route("/getUserAudio", methods=["POST"])
 def get_user_audio():
+    file = request.files.get("file")
+    success = False
 
     try:
 
@@ -353,8 +355,43 @@ def get_user_audio():
         text_ = "error"
         info = ""
         print("user said:", text)
+        
+        
+        # ------------------------> image detection <----------------------
+        if file:
+            print("file is thereree ---------------")
 
-        if "open" in text and ("application" in text or "app" in text):
+            if "object" in text and ("detect" in text or "detection" in text):
+                
+                text, AI_res, info, success, status = Object_Detection_model(file)
+                
+            elif "leaf" in text or "plant disease" in text:
+                text, AI_res, info, success, status = Leaf_Disease_Prediction_model(file)
+                
+            else:
+                text = "give corect prompt",
+                info = "obj detction prompt -> keywprd(object , detect) || plant disease prompt -> keyword (leaf ,plant disease) ",
+                success = False
+                status = 500
+                
+                
+            print(f" text {text} \nmessage {text_} \ninfo {info} \nsuccess {success}")
+            text_ = text
+
+            # return (
+            #     jsonify(
+            #         {
+            #             "text": text,
+            #             "message": text_,
+            #             "info": info,
+            #             "success": success,
+            #         }
+            #     ),
+            #     status,
+            # )
+
+
+        elif "open" in text and ("application" in text or "app" in text):
 
             print("openinggg->")
             try:
@@ -387,8 +424,6 @@ def get_user_audio():
                 print(e)
         
 
-
-
         elif (
             "who" in text
             or "what" in text
@@ -406,7 +441,7 @@ def get_user_audio():
             text_ = AI_interaction(text)
             print("text_ in interact:---\n", text_)
 
-            if "error in detection" in text_:
+            if ("error in detection" in text_ or "response not found" in text_):
 
                 if "battery status" in text:
                     text_ = fullybattery()
@@ -421,7 +456,7 @@ def get_user_audio():
         return jsonify({"text": text_, "info": info}), 200
 
     except Exception as e:
-        print(e)
+        print("error---> internal",e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -447,7 +482,7 @@ def GetUserPrompt():
         if file:
             print("file is thereree ---------------")
 
-            if "object" in text and "detect" in text:
+            if "object" in text and ("detect" in text or "detection" in text):
                 
                 text, AI_res, info, success, status = Object_Detection_model(file)
                 
@@ -527,23 +562,15 @@ def GetUserPrompt():
         elif "who" in text or "what" in text or "how" in text or "search" in text:
 
             text = text.replace("search", "")
-            print("-----------------------------> prompt ->",text)
             text_response = Search_Wikipedia(text)
             info = text_response
             text_ = f"here is info about {text}"
-            
-            print("-----------------> response from wikipedia\n",info)
-            
-
 
         # ------------------------> house price prediction <-----------------------------
         elif "house" in text and ("prediction" in text or "predict" in text):
-            # HousePricePredictionBanglore
-            print("HPP",text)
             try:
                 text = text.lower()
 
-                # Extract bhk, sqft, bath using regex
                 bhk_match = re.search(r"(\d+)\s*bhk", text) or re.search(
                     r"bhk\s*(\d+)", text
                 )
@@ -558,7 +585,6 @@ def GetUserPrompt():
                 sqft = int(sqft_match.group(1)) if sqft_match else None
                 bath = int(bath_match.group(1)) if bath_match else None
 
-                # Extract location by removing known tokens
                 tokens = text.split()
                 ignore = {
                     "house",
@@ -616,14 +642,10 @@ def GetUserPrompt():
                 print("Sqft:", sqft)
                 print("Bath:", bath)
 
-                # Instead of calling the Flask route directly, forward the request
                 response = requests.post(
                     "http://127.0.0.1:5000/HousePricePredictionBanglore",
                     json={"location": location, "bhk": bhk, "bath": bath, "sqft": sqft},
                 )
-
-                # print("status code:", response.status_code)
-                # print("message:", response.json().get("message"))
 
                 if response.status_code == 200:
                     message = response.json().get("message")

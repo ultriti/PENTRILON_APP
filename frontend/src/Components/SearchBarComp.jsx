@@ -6,9 +6,9 @@ import send_webp from "../../public/images/app_components/arrow.webp"
 import plus_webp from "../../public/images/app_components/clip.png"
 import check_webp from "../../public/images/app_components/check.png"
 
-const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, setImage_res, IsNewConvo }) => {
+const SearchBarComp = ({ setAI_Speak_Msg, setAI_respond, setAI_Response_Info, setImage_res, IsNewConvo,selectedFile, setSelectedFile}) => {
     const [SendPromptValue, setSendPromptValue] = useState("")
-    const [selectedFile, setSelectedFile] = useState(null)
+    // const [selectedFile, setSelectedFile] = useState(null)
     const fileInputRef = useRef(null)
     const [isSending, setisSending] = useState(false)
 
