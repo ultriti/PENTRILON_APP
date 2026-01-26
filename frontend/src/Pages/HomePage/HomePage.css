@@ -174,13 +174,38 @@
     padding: .5vw 0;
 }
 
+/* ----------------------> user account frame */
 .UserAccount_Frame {
     height: 3.5vw;
     width: 100%;
     /* background-color: darkblue; */
     border-top: 1px solid gray;
     margin-top: 0.1vw;
+    position: relative;
 }
+
+.User_Profile_toggle_frame{
+    height: 55vh;
+    width: 19vw;
+    background-color: #fff;
+    position: absolute;
+    bottom: 3.5vw;
+    left: .5vw;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1vw;
+}
+
+.User_account_info{
+    height: 10vh;
+    width: 100%;
+    background-color: #b99a9a;
+
+}
+
+/* conversaion history frame  */
 
 .Conversation_Title_frame {
     height: 3vw;

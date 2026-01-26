@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./HomePage.css";
 
@@ -24,13 +24,18 @@ import Micro_chip_webp from "../../../public/images/app_components/micro-chip.we
 import SearchBarComp from "../../Components/SearchBarComp.jsx";
 import DownloadModelButton from "../../Components/DownloadModelBtn.jsx";
 import AudioRingVisualizer from "../Automation/AI_audio_circular_wave.jsx";
+import { userDataContext } from "../../context/User_context/UserContext";
 
 
 const Homepage = () => {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
-  const interactFrameRef = useRef(null); // 👈 NEW: Added for scrolling
+  const interactFrameRef = useRef(null); // added fr scrollin
 
+  // -> context
+  const { user_profile_toggle_fun, User_Profile_toggle,user_profile_close_fun } = useContext(userDataContext);
+
+  // use sates
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setisSpeaking] = useState(false)
 
@@ -56,6 +61,8 @@ const Homepage = () => {
   // --------------------------
   const [selectedFile, setSelectedFile] = useState(null)
   const [isSending, setisSending] = useState(false)
+
+  // funtions 
 
   const loadInteractions = useCallback(() => {
     try {
@@ -158,14 +165,10 @@ const Homepage = () => {
   const StartRecording = async () => {
     setIsRecording(true);
     const formData = new FormData()
-    // formData.append("Prompt", SendPromptValue)
     if (selectedFile) {
       formData.append("file", selectedFile)
     }
-
-    // const data = { da: "hello" };
     setisSending(true)
-
 
     const res = await axios.post("http://127.0.0.1:8000/getUserAudio", formData, {
       withCredentials: true,
@@ -209,6 +212,7 @@ const Homepage = () => {
               data: "hey"
             }
 
+            // web automation audio to text ----------------->
             try {
               const A2Text = await axios.post("http://127.0.0.1:8000/GetAudio_To_Text", data_, { withCredentials: true });
 
@@ -288,13 +292,14 @@ const Homepage = () => {
     setAI_respond("")
   }
 
+  // scroll to latest convo
   useEffect(() => {
     if (Conversation?.length > 0) {
       scrollToLatestConvo();
     }
   }, [Conversation?.length, scrollToLatestConvo]);
 
-
+  // setting ai convo -> in history 
   useEffect(() => {
     const getlocal = localStorage.getItem("AI_interact");
 
@@ -312,7 +317,22 @@ const Homepage = () => {
 
   return (
     <div className="HomePage_frame">
-      <div className="HomePage_cont">
+      <div className="HomePage_cont" >
+
+        {
+          User_Profile_toggle ? (
+            <div className="User_Profile_toggle_frame">
+
+              <div className="User_account_info">
+
+              </div>
+
+            </div>
+
+          ) : (
+            <></>
+          )
+        }
 
         {/* 👈 UPDATED: Latest button with scroll function */}
         <button className="ping_btn" onClick={() => { pinging() }}>
@@ -340,11 +360,11 @@ const Homepage = () => {
         {/* ------------------------> interaction history frame  */}
         <div className="History_Interact_Frame">
 
-          <div className="AI_Voice_Response_Frame">
+          <div className="AI_Voice_Response_Frame" onClick={()=>{user_profile_close_fun()}}>
             <AudioRingVisualizer isSpeaking={isSpeaking} />
           </div>
 
-          <div className="User_Interaction_features_frame">
+          <div className="User_Interaction_features_frame" onClick={()=>{user_profile_close_fun()}}>
 
             <button className="clear_convo_btn" onClick={() => { clear_convo_LS() }}>
               <img src={business_webp} alt="" />
@@ -355,7 +375,7 @@ const Homepage = () => {
 
           </div>
 
-          <div className="User_AI_intercation_History">
+          <div className="User_AI_intercation_History" onClick={()=>{user_profile_close_fun()}}>
             <div className="User_AI_intercation_History_Cont">
 
               <div className="Conversation_Title_frame">
@@ -378,7 +398,11 @@ const Homepage = () => {
             </div>
           </div>
 
-          <div className="UserAccount_Frame">
+          <div className="UserAccount_Frame" onClick={() => { user_profile_toggle_fun() }}>
+
+            {/* user detail toggle frame */}
+
+
             <div className="Username_Info_Frame">
 
               <div className="User_Profile_Picture">
@@ -400,7 +424,7 @@ const Homepage = () => {
         </div>
 
         {/* --------------------> ai user intercation frame */}
-        <div className="Pentrilon_Interact_Frame">
+        <div className="Pentrilon_Interact_Frame" onClick={()=>{user_profile_close_fun()}}>
           <div className="Pentrilon_Agent_Frame">
             <p>Pentrilon Agent: {AI_Speak_Msg} {AI_Speak_Msg ? ". . ." : ""} </p>
           </div>
@@ -410,6 +434,7 @@ const Homepage = () => {
             ref={interactFrameRef}
           >
 
+            {/* -> ai and userinteraction frame ->  */}
             {
               Conversation ? (
                 <div className={Conversation?.length > 0 ? "AI_Response_Info_Frame AI_Response_Info_Frame_h" : "AI_Response_Info_Frame"}>
@@ -453,7 +478,6 @@ const Homepage = () => {
                   }
 
                   <div className="Conversation_Title_frame" id="latest_convo">
-                    {/* <p>Latest conversation content here...</p>  */}
                   </div>
                 </div>
               ) : (
@@ -466,6 +490,7 @@ const Homepage = () => {
 
               <div className="user_input_label">
 
+                {/* user prompt sending -> input */}
                 <div className="_top_">
                   <SearchBarComp
                     setAI_Speak_Msg={setAI_Speak_Msg}
@@ -477,44 +502,11 @@ const Homepage = () => {
                     setSelectedFile={setSelectedFile}
                   />
 
-                  {/* ai interact buttons  */}
-                  {/* <div className="User_insteract_btns">
-
-                    <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>
-                      {
-                        isRecording ? (<><img src={stop_rec_webp} alt="" /></>) : (<><img src={mic_webp} alt="" /></>)
-                      }
-                    </button>
-
-                    <button
-                      className="AI_Speech_Rec_toggle"
-                      onClick={() => {
-                        if (isSpeaking) {
-                          // alert("Already speaking");
-                          stopSpeaking()
-                          setisSpeaking(false)
-                        } else {
-                          {
-                            AI_respond ? Pentrilonspeak_Info(AI_respond || AI_Speak_Msg) :
-                              PentrilonSpeaker(AI_Speak_Msg ? AI_Speak_Msg : " how are you, my name is Pentrilon")
-                          }
-                        }
-                      }}
-                    >
-
-                      {isSpeaking ? (
-                        <img src={stop_rec_webp} alt="Stop speaking" />
-                      ) : (
-                        <img src={speaker_webp} alt="Speak" />
-                      )}
-
-                    </button>
-
-                  </div> */}
                 </div>
 
                 <div className="Input_Features_frame">
 
+                  {/* ------->  */}
                   <div className="Input_Feature_Left">
                     <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>
                       {/* <img src={mike_webp} alt="" /> */}
@@ -522,6 +514,7 @@ const Homepage = () => {
 
                   </div>
 
+                  {/* input right frmae -> model,speaker,user */}
                   <div className="Input_Feature_Right">
 
                     <button className="AI_Speech_Rec_toggle" onClick={isRecording ? StopRecording : StartRecording}>
@@ -570,6 +563,8 @@ const Homepage = () => {
           </div>
 
         </div>
+
+
       </div>
     </div >
   );
