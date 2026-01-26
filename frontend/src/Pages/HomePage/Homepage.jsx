@@ -26,6 +26,7 @@ import DownloadModelButton from "../../Components/DownloadModelBtn.jsx";
 import AudioRingVisualizer from "../Automation/AI_audio_circular_wave.jsx";
 import { userDataContext } from "../../context/User_context/UserContext";
 import User_info_toggle_frame from "../../Components/User_Detail_toggle_frame/User_info_toggle_frame.jsx";
+import Pentrilon_feature_frame from "../../Components/User_Detail_toggle_frame/pentrilon_feature_frame.jsx";
 
 
 const Homepage = () => {
@@ -34,7 +35,7 @@ const Homepage = () => {
   const interactFrameRef = useRef(null); // added fr scrollin
 
   // -> context
-  const { user_profile_toggle_fun, User_Profile_toggle, user_profile_close_fun } = useContext(userDataContext);
+  const { user_profile_toggle_fun, User_Profile_toggle, user_profile_close_fun, user_feature_close_fun, user_Feature_toggle_fun,Feature_main_frame_toggle } = useContext(userDataContext);
 
   // use sates
   const [isRecording, setIsRecording] = useState(false);
@@ -328,6 +329,21 @@ const Homepage = () => {
           ) : (
             <></>
           )
+        }
+
+        {
+          // user_feature_close_fun 
+          Feature_main_frame_toggle
+          ? (
+            <div className="AI_multi_feature_frame_">
+                <Pentrilon_feature_frame />
+            </div>
+          ) : (<></>)
+        }
+
+        {/* ----------> feature main toggle frame */}
+        {
+
         }
 
         {/* 👈 UPDATED: Latest button with scroll function */}

@@ -4,6 +4,15 @@ import threading
 import pyttsx3
 from AppOpener import open ,give_appnames
 
+
+engine = pyttsx3.init()
+voices = engine.getProperty('voice')
+
+# Function to convert text to speech
+def speak(say):
+    engine.say(say)
+    engine.runAndWait()
+
 def open_settings(query_3):
     print(give_appnames())
 
@@ -14,3 +23,5 @@ def open_settings(query_3):
     return "settings command not matched"
 
 open_settings("settings")
+
+# speak("hello world")
