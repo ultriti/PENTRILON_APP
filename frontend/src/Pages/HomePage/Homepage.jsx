@@ -25,6 +25,7 @@ import SearchBarComp from "../../Components/SearchBarComp.jsx";
 import DownloadModelButton from "../../Components/DownloadModelBtn.jsx";
 import AudioRingVisualizer from "../Automation/AI_audio_circular_wave.jsx";
 import { userDataContext } from "../../context/User_context/UserContext";
+import User_info_toggle_frame from "../../Components/User_Detail_toggle_frame/User_info_toggle_frame.jsx";
 
 
 const Homepage = () => {
@@ -33,7 +34,7 @@ const Homepage = () => {
   const interactFrameRef = useRef(null); // added fr scrollin
 
   // -> context
-  const { user_profile_toggle_fun, User_Profile_toggle,user_profile_close_fun } = useContext(userDataContext);
+  const { user_profile_toggle_fun, User_Profile_toggle, user_profile_close_fun } = useContext(userDataContext);
 
   // use sates
   const [isRecording, setIsRecording] = useState(false);
@@ -319,15 +320,10 @@ const Homepage = () => {
     <div className="HomePage_frame">
       <div className="HomePage_cont" >
 
+        {/* ----------------------> user account frame toggle */}
         {
           User_Profile_toggle ? (
-            <div className="User_Profile_toggle_frame">
-
-              <div className="User_account_info">
-
-              </div>
-
-            </div>
+            <User_info_toggle_frame />
 
           ) : (
             <></>
@@ -360,11 +356,11 @@ const Homepage = () => {
         {/* ------------------------> interaction history frame  */}
         <div className="History_Interact_Frame">
 
-          <div className="AI_Voice_Response_Frame" onClick={()=>{user_profile_close_fun()}}>
+          <div className="AI_Voice_Response_Frame" onClick={() => { user_profile_close_fun() }}>
             <AudioRingVisualizer isSpeaking={isSpeaking} />
           </div>
 
-          <div className="User_Interaction_features_frame" onClick={()=>{user_profile_close_fun()}}>
+          <div className="User_Interaction_features_frame" onClick={() => { user_profile_close_fun() }}>
 
             <button className="clear_convo_btn" onClick={() => { clear_convo_LS() }}>
               <img src={business_webp} alt="" />
@@ -375,7 +371,7 @@ const Homepage = () => {
 
           </div>
 
-          <div className="User_AI_intercation_History" onClick={()=>{user_profile_close_fun()}}>
+          <div className="User_AI_intercation_History" onClick={() => { user_profile_close_fun() }}>
             <div className="User_AI_intercation_History_Cont">
 
               <div className="Conversation_Title_frame">
@@ -424,7 +420,7 @@ const Homepage = () => {
         </div>
 
         {/* --------------------> ai user intercation frame */}
-        <div className="Pentrilon_Interact_Frame" onClick={()=>{user_profile_close_fun()}}>
+        <div className="Pentrilon_Interact_Frame" onClick={() => { user_profile_close_fun() }}>
           <div className="Pentrilon_Agent_Frame">
             <p>Pentrilon Agent: {AI_Speak_Msg} {AI_Speak_Msg ? ". . ." : ""} </p>
           </div>
