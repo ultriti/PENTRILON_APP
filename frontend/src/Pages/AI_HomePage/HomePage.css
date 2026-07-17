@@ -1,0 +1,8 @@
+.userConversationFrame{
+    min-height: 100vh;
+    width: 82vw;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}

@@ -10,6 +10,8 @@ from flask import (
 )
 import json
 import subprocess
+import bcrypt
+from bson import json_util
 
 
 from flask_wtf.csrf import CSRFProtect
@@ -21,9 +23,15 @@ import pyttsx3
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
+import time
 
 from open_appliaction import (
-    open_notepad, open_calculator, open_settings, open_chrome, open_vscode, open_edge
+    open_notepad,
+    open_calculator,
+    open_settings,
+    open_chrome,
+    open_vscode,
+    open_edge,
 )
 
 from Model_Interaction import (
@@ -48,11 +56,21 @@ import json
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer
 import zipfile
+import threading
+
+from config import get_db
 
 
 # ------------------------------------ app --------------------------------------------
 
 app = Flask(__name__)
+
+db = get_db()
+# if db:
+#     collection = db["Pentrilon_AI_DB"]
+#     result = collection.find_one()
+#     print(result)
+
 
 # Allow requests from Electron frontend (file://) and dev server (localhost:8080)
 CORS(app, supports_credentials=True, origins=["http://localhost:8080", "file://"])
@@ -170,28 +188,28 @@ def DownloadBigModel():
     )
 
 
-def Load_model_rec_off():
-    global model
-    print("model loading ...........")
+# def Load_model_rec_off():
+#     global model
+#     print("model loading ...........")
 
-    # project-local path
-    base_dir = os.path.join(os.path.dirname(__file__), "models")
-    target_dir = get_model_dir()
-    high_acc_model = os.path.join(target_dir, "vosk-model-en-us-0.22")
+#     # project-local path
+#     base_dir = os.path.join(os.path.dirname(__file__), "models")
+#     target_dir = get_model_dir()
+#     high_acc_model = os.path.join(target_dir, "vosk-model-en-us-0.22")
 
-    small_model = os.path.join(base_dir, "vosk-model-small-en-us-0.15")
+#     small_model = os.path.join(base_dir, "vosk-model-small-en-us-0.15")
 
-    print("high_acc_model", high_acc_model)
-    print("os.path.isdir(high_acc_model)", os.path.isdir(high_acc_model))
+#     print("high_acc_model", high_acc_model)
+#     print("os.path.isdir(high_acc_model)", os.path.isdir(high_acc_model))
 
-    if os.path.isdir(high_acc_model):
-        model = Model(high_acc_model)
-        print("model loaded high acc")
-    elif os.path.isdir(small_model):
-        model = Model(small_model)
-        print("model loaded low acc")
-    else:
-        raise FileNotFoundError("No Vosk model found")
+#     if os.path.isdir(high_acc_model):
+#         model = Model(high_acc_model)
+#         print("model loaded high acc")
+#     elif os.path.isdir(small_model):
+#         model = Model(small_model)
+#         print("model loaded low acc")
+#     else:
+#         raise FileNotFoundError("No Vosk model found")
 
 
 # def Load_model_rec_off():
@@ -208,6 +226,40 @@ def Load_model_rec_off():
 #     else:
 #         model = Model(small_model)
 #         print("model loaded low acc")
+
+
+model = None
+model_ready = False
+model_lock = threading.Lock()  # Optional: for thread-safe access
+
+
+def Load_model_rec_off():
+    global model, model_ready
+    print("model loading ...........")
+
+    base_dir = os.path.join(os.path.dirname(__file__), "models")
+    target_dir = get_model_dir()
+    high_acc_model = os.path.join(target_dir, "vosk-model-en-us-0.22")
+    small_model = os.path.join(base_dir, "vosk-model-small-en-us-0.15")
+
+    if os.path.isdir(high_acc_model):
+        model = Model(high_acc_model)
+        print("model loaded high acc")
+    elif os.path.isdir(small_model):
+        model = Model(small_model)
+        print("model loaded low acc")
+    else:
+        print(
+            "No Vosk model found - will fail on offline recognition"
+        )  # Don't raise, let app start
+        model = None
+
+    with model_lock:
+        model_ready = True
+
+
+# Background model loading at startup - daemon so it doesn't block shutdown
+threading.Thread(target=Load_model_rec_off, daemon=True).start()
 
 
 def internet_connected(url="http://www.google.com/", timeout=5):
@@ -231,14 +283,83 @@ def speak(say):
         print("TTS error:", e)
 
 
+# def take_command(
+#     max_wait=5,
+#     model_path=r"E:\main projects\Pentrilon-desktop\backend\models\vosk-model-small-en-us-0.15",
+# ):
+#     """Listen for a voice command with online/offline fallback."""
+#     if internet_connected():
+#         global model
+
+#         # Online mode: Google Speech Recognition
+#         with sr.Microphone() as source_mic:
+#             print("Listening (Google)...")
+#             try:
+#                 audio = r.listen(
+#                     source_mic, timeout=max_wait, phrase_time_limit=max_wait
+#                 )
+#             except sr.WaitTimeoutError:
+#                 print("Timeout: No speech detected.")
+#                 return "none"
+
+#             print("Recognizing (Google)...")
+#             r.pause_threshold = 0.5
+#             try:
+#                 query_ = r.recognize_google(audio, language="en-US")
+#                 print(f"User said: {query_}\n")
+#                 return query_
+#             except Exception as e:
+#                 print(f"Error: {str(e)}")
+#                 return "None"
+#     else:
+#         if not os.path.isdir(model_path):
+#             print(f"Model path not found: {model_path}")
+#             return "None"
+
+#         print("-------------->No internet. Switching to offline Vosk mode...")
+
+#         try:
+
+#             global model
+#             rec = KaldiRecognizer(model, 16000)
+#             recognized_text = None
+
+#             def callback(indata, frames, time_info, status):
+#                 nonlocal recognized_text
+#                 if rec.AcceptWaveform(bytes(indata)):
+
+#                     result = json.loads(rec.Result())
+#                     if result.get("text"):
+#                         recognized_text = result["text"]
+
+#             with sd.RawInputStream(
+#                 samplerate=16000,
+#                 blocksize=8000,
+#                 dtype="int16",
+#                 channels=1,
+#                 callback=callback,
+#             ):
+#                 print("Speak (offline)...")
+#                 sd.sleep(max_wait * 1000)  # listen for max_wait seconds
+
+#             if recognized_text:
+#                 print(f"User said (offline): {recognized_text}")
+#                 return recognized_text
+#             else:
+#                 print("No speech detected offline.")
+#                 return "None"
+
+#         except Exception as e:
+#             print("error---------------------------------\n", e)
+#             return jsonify({"error": str(e)}), 500
+
+
 def take_command(
     max_wait=5,
     model_path=r"E:\main projects\Pentrilon-desktop\backend\models\vosk-model-small-en-us-0.15",
 ):
     """Listen for a voice command with online/offline fallback."""
     if internet_connected():
-        global model
-
         # Online mode: Google Speech Recognition
         with sr.Microphone() as source_mic:
             print("Listening (Google)...")
@@ -260,22 +381,26 @@ def take_command(
                 print(f"Error: {str(e)}")
                 return "None"
     else:
-        if not os.path.isdir(model_path):
-            print(f"Model path not found: {model_path}")
-            return "None"
-
         print("-------------->No internet. Switching to offline Vosk mode...")
 
-        try:
+        # Wait for model to be ready with timeout
+        timeout = 10  # seconds
+        start_time = time.time()
+        while not model_ready and (time.time() - start_time) < timeout:
+            print("Waiting for model to load...")
+            time.sleep(0.5)
 
-            global model
+        if not model_ready or model is None:
+            print("Model not ready or not found - skipping offline recognition")
+            return "None"
+
+        try:
             rec = KaldiRecognizer(model, 16000)
             recognized_text = None
 
             def callback(indata, frames, time_info, status):
                 nonlocal recognized_text
                 if rec.AcceptWaveform(bytes(indata)):
-
                     result = json.loads(rec.Result())
                     if result.get("text"):
                         recognized_text = result["text"]
@@ -288,7 +413,7 @@ def take_command(
                 callback=callback,
             ):
                 print("Speak (offline)...")
-                sd.sleep(max_wait * 1000)  # listen for max_wait seconds
+                sd.sleep(max_wait * 1000)
 
             if recognized_text:
                 print(f"User said (offline): {recognized_text}")
@@ -296,10 +421,95 @@ def take_command(
             else:
                 print("No speech detected offline.")
                 return "None"
-
         except Exception as e:
             print("error---------------------------------\n", e)
-            return jsonify({"error": str(e)}), 500
+            return "None"
+
+
+# Auth routes ------------------------->
+
+from flask import jsonify, request
+from bson import json_util
+import bcrypt
+
+
+@app.route("/UserRegister", methods=["POST"])
+def UserRegister():
+    data = request.json
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+    collection = db["user"]
+
+    if not name or not email or not password:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    if collection.find_one({"email": email}):
+        return jsonify({"error": "Email already registered"}), 400
+
+    hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
+        "utf-8"
+    )
+
+    # Insert the new user into the database
+    collection.insert_one(
+        {
+            "username": name,
+            "email": email,
+            "password": hashed_password,
+            "isVerified": False,
+            "isUpgraded": False,
+        }
+    )
+
+    # Fetch the user back
+    user = collection.find_one({"email": email})
+
+    if user:
+        collection.update_one({"email": email}, {"$set": {"isVerified": True}})
+
+    print("user", user)
+    user_json = {
+        "username": user.get("username"),
+        "email": user.get("email"),
+        "Premium": user.get("isUpgraded"),
+    }
+
+    # Remove sensitive fields before returning
+    if "password" in user_json:
+        del user_json["password"]
+
+    print("user_json", user_json)
+
+    return (
+        jsonify({"message": "User registered successfully", "userDetail": user_json}),
+        201,
+    )
+
+
+@app.route("/UserLogin", methods=["POST"])
+def UserLogin():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+    collection = db["user"]
+    
+    print("---------- Login attempt for email:", email)
+
+    user = collection.find_one({"email": email})
+    if not user:
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    if bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
+        # session["user_id"] = str(user['_id'])
+        user_json = {
+            "username": user.get("username"), 
+            "email": user.get("email"),
+            "hasPremium" : user.get("isUpgraded")
+            }
+        return jsonify({"message": "Login successful", "userDetail": user_json}), 200
+    else:
+        return jsonify({"error": "Invalid password"}), 401
 
 
 # ---------------------> home route
@@ -355,26 +565,28 @@ def get_user_audio():
         text_ = "error"
         info = ""
         print("user said:", text)
-        
-        
+
         # ------------------------> image detection <----------------------
         if file:
             print("file is thereree ---------------")
 
             if "object" in text and ("detect" in text or "detection" in text):
-                
+
                 text, AI_res, info, success, status = Object_Detection_model(file)
-                
+
             elif "leaf" in text or "plant disease" in text:
-                text, AI_res, info, success, status = Leaf_Disease_Prediction_model(file)
-                
+                text, AI_res, info, success, status = Leaf_Disease_Prediction_model(
+                    file
+                )
+
             else:
-                text = "give corect prompt",
-                info = "obj detction prompt -> keywprd(object , detect) || plant disease prompt -> keyword (leaf ,plant disease) ",
+                text = ("give corect prompt",)
+                info = (
+                    "obj detction prompt -> keywprd(object , detect) || plant disease prompt -> keyword (leaf ,plant disease) ",
+                )
                 success = False
                 status = 500
-                
-                
+
             print(f" text {text} \nmessage {text_} \ninfo {info} \nsuccess {success}")
             text_ = text
 
@@ -389,7 +601,6 @@ def get_user_audio():
             #     ),
             #     status,
             # )
-
 
         elif "open" in text and ("application" in text or "app" in text):
 
@@ -422,7 +633,6 @@ def get_user_audio():
 
             except Exception as e:
                 print(e)
-        
 
         elif (
             "who" in text
@@ -441,7 +651,7 @@ def get_user_audio():
             text_ = AI_interaction(text)
             print("text_ in interact:---\n", text_)
 
-            if ("error in detection" in text_ or "response not found" in text_):
+            if "error in detection" in text_ or "response not found" in text_:
 
                 if "battery status" in text:
                     text_ = fullybattery()
@@ -456,7 +666,7 @@ def get_user_audio():
         return jsonify({"text": text_, "info": info}), 200
 
     except Exception as e:
-        print("error---> internal",e)
+        print("error---> internal", e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -483,21 +693,22 @@ def GetUserPrompt():
             print("file is thereree ---------------")
 
             if "object" in text and ("detect" in text or "detection" in text):
-                
+
                 text, AI_res, info, success, status = Object_Detection_model(file)
-                
+
             elif "leaf" in text or "plant disease" in text:
                 text, AI_res, info, success, status = Leaf_Disease_Prediction_model(file)
                 
+                print(text, AI_res, info, success, status)
+
             else:
-                text = "give corect prompt",
-                info = "obj detction prompt -> keywprd(object , detect) || plant disease prompt -> keyword (leaf ,plant disease) ",
+                text = ("give corect prompt",)
+                info = (
+                    "obj detction prompt -> keywprd(object , detect) || plant disease prompt -> keyword (leaf ,plant disease) ",
+                )
                 success = False
                 status = 500
-                
-                
 
-            
             Prompt_text = Prompt.lower()
             if Prompt_text:
                 print("intract")
@@ -505,11 +716,12 @@ def GetUserPrompt():
 
                 # If AI_interaction returns (text, text_, info, success, status)
                 # and you want the "info" part:
+                
+                
                 print("AI_res_2:", AI_res_2)
                 print("info", info)
 
                 info = AI_res_2[2] + "\n" + info
-
 
             print(f" text {text} \nmessage {text_} \ninfo {info} \nsuccess {success}")
 
@@ -601,7 +813,6 @@ def GetUserPrompt():
                     "value",
                 }
 
-                print("ignore",ignore)
 
                 location_tokens = [
                     t
@@ -801,16 +1012,14 @@ def GetUserPrompt():
 
                 if "battery status" in text:
                     text_ = "here is battery status"
-                    info = fullybattery() 
+                    info = fullybattery()
 
                 else:
                     text_ = "error in detection"
                     info = "error found"
 
             print(text_)
-            
-            
-            
+
         # info = Prompt
         # print("-------------------->\ninfo : ",info)
         # print("-------------------->\text_ : ",text_)
@@ -818,7 +1027,7 @@ def GetUserPrompt():
         return jsonify({"message": text_, "text": text_, "info": info}), 200
 
     except Exception as e:
-        print("error",e)
+        print("error", e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -830,6 +1039,6 @@ if __name__ == "__main__":
         speak("how may i help you")
 
     Greeting()
-    Load_model_rec_off()
+    time.sleep(2)
 
     app.run(host="127.0.0.1", port=8000, debug=False)

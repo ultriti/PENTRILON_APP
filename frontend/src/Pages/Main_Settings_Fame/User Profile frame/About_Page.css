@@ -1,0 +1,86 @@
+.app-container {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.color-White p{
+  color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.logo {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #facc15; /* golden hover */
+}
+
+.page {
+  max-width: 60vw;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background: #f9fafb;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  line-height: 1.8;
+}
+
+.title, .subtitle {
+  color: #1e3a8a;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.highlight {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.emphasis {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.features li {
+  background: #e0f2fe;
+  margin: 0.5rem 0;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.features li:hover {
+  transform: scale(1.02);
+  background: #bae6fd;
+}

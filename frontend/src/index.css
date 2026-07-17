@@ -32,3 +32,26 @@ button:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 2px;
 }
+
+
+.MainFrame{
+  height: 100vh;
+  width: 82vw;
+  background-color: #0e0e0e;
+  display: flex;
+  margin-left: 18vw;
+}
+
+
+.sidebarFrame{
+  height: 100vh;
+  width:18vw;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.noScrollBar::-webkit-scrollbar{
+  width: 0;
+}

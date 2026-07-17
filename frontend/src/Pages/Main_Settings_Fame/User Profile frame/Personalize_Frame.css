@@ -1,0 +1,29 @@
+.Personalize_main_frame{
+    height: 100%;
+    width: 100%;
+    /* background-color: #0c6534; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Personalize_main_frame_cont{
+    height: 100%;
+    width: 100%;
+    /* background-color: #4a1616; */
+    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/*  */
+.Progress_bar_frame{
+    height: 100%;
+    width: 40vw;
+    /* background-color: #fff; */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: center;
+}

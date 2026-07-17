@@ -91,8 +91,8 @@
 }
 
 .circular-progress {
-    height: 3.5vw;
-    width: 3.5vw;
+    height: 2.5vw;
+    width: 2.5vw;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -102,8 +102,8 @@
 }
 
 .download-btn {
-    height: 3.1vw;
-    width: 3.1vw;
+    height: 2.5vw;
+    width: 2.5vw;
     border-radius: 50%;
     border: none;
     background-color: rgb(1, 76, 133);

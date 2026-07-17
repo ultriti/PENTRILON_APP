@@ -11,7 +11,7 @@
 }
 
 .User_Profile_toggle_frame {
-    height: 60vh;
+    min-height: 20vh;
     width: 19vw;
     background: linear-gradient(135deg, #0f2027, #202443, #2c3164);
 
@@ -33,6 +33,15 @@
     flex-direction: column;
     gap: .7vw;
     border-bottom: 1px solid rgb(73, 73, 73);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 0.5vw;
+}
+
+.User_account_info:hover{
+    background: linear-gradient(135deg, #015a83, #353b6e, #40468f);
+    cursor: pointer;
+
 }
 
 .User_account_info,

@@ -1,0 +1,92 @@
+/* body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+} */
+
+.register-container {
+    min-height: 30vw;
+    /* background: #fff; */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.register-container form{
+    height: 100%;
+    width: 100%;
+    /* background-color: hsl(0, 62%, 68%); */
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.register-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #040022;
+    border-radius: 4px;
+    background-color: #05031c;
+    color: whitesmoke;
+}
+
+.register-container input:focus{
+    outline: none;
+    border-color: #004196;
+    box-shadow: 0 0 5px rgba(8, 0, 121, 0.5);
+}
+
+.Register_Btn_frame{
+    height: 5vw;
+    width: 100%;
+    /* background-color: #fff; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: .1vw;
+}
+
+
+.register-container button {
+    width: 80%;
+    padding: 10px;
+    background: #0078d7;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.register-container button:hover {
+    background: #005fa3;
+}
+
+
+
+.User_route_auth_frame{
+    height: 5vh;
+    width: 100%;
+    /* background-color: #8a3434; */
+    margin-top: 2vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    gap: .7vw;
+    cursor: pointer;
+}

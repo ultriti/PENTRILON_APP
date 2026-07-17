@@ -1,0 +1,135 @@
+/* ---------------------------------------\ */
+.bottom_border{
+    border-bottom: 1px solid rgb(51, 51, 51);
+}
+
+.mt-1{
+    margin-top: 1vw;
+}
+
+.bg-white{
+    background-color: #fff;
+}
+
+
+.User_Profile_frame{
+    height: 100%;
+    width: 100%;
+    /* background-color: #251818; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 0 0;
+}
+
+/* .User_Profile_frame_cont{
+    height: ;
+} */
+
+.Feature_Menu_left{
+    height: 100%;
+    width: 18vw;
+    background-color: #080a2c3f;
+    display: flex;
+    flex-direction: column;
+    /* padding: 1vw; */
+}
+
+.Feature_main_content{
+    height: 100%;
+    width: 41vw;
+    /* background-color: #af3737; */
+    display: flex;
+    flex-direction: column;
+}
+
+.Feature_Menu_Frame{
+    height: 7vh;
+    width: 100%;
+    /* background-color: #814747; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 1vw;
+}
+
+.Feature_Menu_Frame:hover{
+    background-color: #00055c;
+    cursor: pointer;
+}
+
+.Feature_Menu_Frame p{
+    font-size: 1.2vw;
+    font-weight: 600;
+    color: #fff;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+
+/* ----------------> cont _  */
+
+.Menu_Feature_Title_frame p{
+    font-size: 1.2vw;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
+
+.Meanu_Feature_Main_Frame_Cont{
+    height: 60vh;
+    width: 100%;
+    /* background-color: #452626; */
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+
+}
+
+.Meanu_Feature_Main_Frame_Cont::-webkit-scrollbar{
+    width: 0;
+}
+
+.Meanu_Feature_Main_Frame_Cont_{
+    min-height: 50vh;
+    width: 100%;
+    /* background-color: #270542; */
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vw;
+}
+
+.Main_Menu_Label_frame{
+    height: 8vh;
+    width: 100%;
+    /* background-color: #964545; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Main_Menu_Label_frame .Menu_value_p{
+    font-size: 1vw;
+    font-weight: 600;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(173, 173, 173);
+
+}
+
+.Main_Menu_Label_frame button{
+    height: 2.6vw;
+    width: 8vw;
+    font-size: 1.2vw;
+    background: linear-gradient(135deg, #0f2027, #191c3a, #121426);
+    color:aliceblue;
+    font-weight: 700;
+
+}
+
+.Main_Menu_Label_frame button:hover { 
+    background: linear-gradient(135deg, #2c3164, #202443, #0f2027); 
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(44, 49, 100, 0.6);
+}

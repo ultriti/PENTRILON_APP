@@ -36,7 +36,7 @@ def Search_Wikipedia(query):
         
         try:
             print("------------>")
-            results = wikipedia.summary(query, sentences=2)
+            results = wikipedia.summary(query)
             print(results)
 
         except wikipedia.PageError:

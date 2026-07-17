@@ -15,5 +15,49 @@
     width: 100%;
     background: linear-gradient(135deg, #091e28, #16192e, #202349);
     border-radius: 20px;
+    overflow: hidden;
 
+}
+
+.Exit_frame_PFF{
+    height: 7vh;
+    width: 100%;
+    background-color: #0b628a;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2vw;
+}
+
+._Feature_Name_{
+    height: 100%;
+    width: 12vw;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.6vw;
+    color: White;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.Exit_frame_PFF .exit_frame_btn{
+    height: 3vh;
+    width: 1.5vw;
+    background-color: #831515;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+}
+
+.AI_Main_Overlay_feature_frame{
+    height: 95%;
+    width: 100%;
+    /* background-color: #583d3d; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
